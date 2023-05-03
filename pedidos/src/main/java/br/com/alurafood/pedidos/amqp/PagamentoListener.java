@@ -1,5 +1,6 @@
 package br.com.alurafood.pedidos.amqp;
 
+import br.com.alurafood.pedidos.dto.*;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.stereotype.*;
@@ -8,7 +9,17 @@ import org.springframework.stereotype.*;
 public class PagamentoListener {
 
     @RabbitListener(queues = "pagamento.concluido")
-    public void recebeMensagem(Message mensagem) {
-        System.out.println("Recebi a mensagem " + mensagem.toString());
+    public void recebeMensagem(PagamentoDto pagamento) {
+        String mensagem = """
+                Dados do pagamento: %s
+                Número do pedido: %s
+                Valor R$: %s
+                Status: %s
+                """.formatted(pagamento.getId(),
+                pagamento.getPedidoId(),
+                pagamento.getValor(),
+                pagamento.getStatus());
+
+        System.out.println("Recebi a mensagem " + mensagem);
     }
 }
