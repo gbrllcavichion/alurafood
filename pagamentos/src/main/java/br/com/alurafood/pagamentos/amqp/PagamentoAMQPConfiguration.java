@@ -13,12 +13,6 @@ import org.springframework.context.annotation.*;
 public class PagamentoAMQPConfiguration {
 
     @Bean
-    public Queue criaFila(){
-        // return QueueBuilder.nonDurable("pagamento.concluido").build();
-        return new Queue("pagamento.concluido", false);
-    }
-
-    @Bean
     public RabbitAdmin criaRabbitAdmin(ConnectionFactory conn) {
         return new RabbitAdmin(conn);
     }
@@ -38,6 +32,11 @@ public class PagamentoAMQPConfiguration {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(messageConverter);
         return rabbitTemplate;
+    }
+
+    @Bean
+    public FanoutExchange fanoutExchange() {
+        return new FanoutExchange("pagamentos.ex");
     }
 
 }
